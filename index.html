@@ -28,7 +28,7 @@
             display: inline-block;
             color: white;
             text-shadow: 2px 2px #000;
-            white-space: nowrap; /* Prevents text from wrapping inside button */
+            white-space: nowrap; 
         }
 
         .pixel-btn:active {
@@ -43,6 +43,7 @@
             justify-content: center;
             padding: 20px;
             text-align: center;
+            position: relative;
         }
 
         #yes-btn {
@@ -63,6 +64,22 @@
             text-shadow: 3px 3px 0px #ffffff;
             line-height: 1.6;
             z-index: 60;
+        }
+
+        /* Heart Animation Styles */
+        .heart {
+            position: fixed;
+            top: -10%;
+            user-select: none;
+            pointer-events: none;
+            z-index: 100;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -113,17 +130,18 @@
         const noBtn = document.getElementById("no-btn");
 
         function updateUI() {
-            if (currentStateIndex >= states.length - 1) {
-                makeNoButtonMove();
-            }
             const state = states[currentStateIndex];
             questionEl.innerText = state.text;
             imageEl.src = state.img;
+
+            if (currentStateIndex === states.length - 1) {
+                makeNoButtonMove();
+            }
         }
 
         function handleNoClick() {
-            currentStateIndex++;
-            if (currentStateIndex < states.length) {
+            if (currentStateIndex < states.length - 1) {
+                currentStateIndex++;
                 paddingLevel += 20; 
                 yesBtn.style.padding = `${16 + paddingLevel}px ${24 + paddingLevel}px`;
                 const currentFontSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
@@ -136,27 +154,44 @@
             document.getElementById("button-container").style.display = "none";
             questionEl.innerText = successState.text;
             imageEl.src = successState.img;
+            
+            // Start the heart rain!
+            startHeartRain();
+        }
+
+        function startHeartRain() {
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+                heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                heart.style.opacity = Math.random();
+                
+                document.body.appendChild(heart);
+
+                // Remove heart after animation to keep the site fast
+                setTimeout(() => {
+                    heart.remove();
+                }, 5000);
+            }, 150);
         }
 
         function makeNoButtonMove() {
-            const rect = noBtn.getBoundingClientRect();
-            noBtn.style.left = rect.left + "px";
-            noBtn.style.top = rect.top + "px";
-            
             noBtn.style.position = "fixed"; 
+            moveButtonRandomly();
             noBtn.addEventListener("mouseover", moveButtonRandomly);
             noBtn.addEventListener("touchstart", moveButtonRandomly);
         }
 
         function moveButtonRandomly() {
             const btnRect = noBtn.getBoundingClientRect();
-            const padding = 20; 
+            const padding = 50; 
             const maxX = window.innerWidth - btnRect.width - padding;
             const maxY = window.innerHeight - btnRect.height - padding;
-
-            const randomX = Math.random() * Math.max(0, maxX);
-            const randomY = Math.random() * Math.max(0, maxY);
-
+            const randomX = Math.max(padding, Math.random() * maxX);
+            const randomY = Math.max(padding, Math.random() * maxY);
             noBtn.style.left = randomX + "px";
             noBtn.style.top = randomY + "px";
         }
