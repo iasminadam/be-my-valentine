@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-image: url('https://i.pinimg.com/736x/d5/98/89/d59889be60201a918001745ef459e570.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .pixel-btn {
+            box-shadow: -4px 0 0 0 #000, 4px 0 0 0 #000, 0 -4px 0 0 #000, 0 4px 0 0 #000;
+            margin: 10px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            display: inline-block;
+            color: white;
+            text-shadow: 2px 2px #000;
+            white-space: nowrap; /* Prevents text from wrapping inside button */
+        }
+
+        .pixel-btn:active {
+            transform: translateY(4px);
+        }
+
+        #main-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #yes-btn {
+            max-width: 80vw;
+            max-height: 40vh;
+            background-color: #e4607a;
+            z-index: 10;
+        }
+        #yes-btn:hover { background-color: #f27c94; }
+
+        #no-btn {
+            background-color: #8b5e5e;
+            z-index: 50;
+        }
+
+        #question-text {
+            color: #5c3d3d;
+            text-shadow: 3px 3px 0px #ffffff;
+            line-height: 1.6;
+            z-index: 60;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        
+        <div class="mb-6">
+            <img id="main-image" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGVpd3p4c3BhNmNhZ3pvMzl5bmN6M3B1MDR4ODgxZzNqMTU2M2ZpaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Zl7u48zLVFgLpRwq6f/giphy.gif" 
+                 class="w-48 h-48 md:w-64 md:h-64 object-contain mx-auto" alt="Cute Pixel Art">
+        </div>
+
+        <h1 id="question-text" class="text-lg md:text-2xl mb-12 px-4">
+            Will you be my Valentine?
+        </h1>
+
+        <div id="button-container" class="flex flex-row flex-nowrap justify-center items-center gap-4 w-full">
+            <button id="yes-btn" class="pixel-btn py-4 px-6 text-xs md:text-base border-2 border-black">
+                YES
+            </button>
+            <button id="no-btn" class="pixel-btn py-4 px-6 text-xs md:text-base border-2 border-black">
+                NO
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const states = [
+            { text: "Will you be my Valentine?", img: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGVpd3p4c3BhNmNhZ3pvMzl5bmN6M3B1MDR4ODgxZzNqMTU2M2ZpaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Zl7u48zLVFgLpRwq6f/giphy.gif" },
+            { text: "Are you sure?", img: "https://i.pinimg.com/736x/fd/bb/66/fdbb6664e911489bbde4976ccdf3087b.jpg" },
+            { text: "Really sure?", img: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmJobnVqMWV3c2NiNWt5bmpzMXlpbW8xMTR5dHMzcHZrdmV1MGJwOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/901mxGLGQN2PyCQpoc/giphy.gif" },
+            { text: "Pookie please?", img: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTdqdWM0cTBxNW42ZGxqNm8zcncyejVzcGxhcWlnM2I0aHR1bGV2NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OBNZCbTy1s8u8i7Wre/giphy.gif" },
+            { text: "PLEAAASEE", img: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2h1N3k4ODE3ODVyZGwyNG5kdzhzcnZscjF6eXBsOXByYW55dGRyeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/98MaHVwJOmWMz4cz1K/giphy.gif" }
+        ];
+
+        const successState = {
+            text: "Yaaaay! I knew you'd say yes! <3",
+            img: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXBhNHc4cGZncDZycXhnZjMzMGF2eGFubGV3cnp2ZnFjd2lmanJmNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ytu2GUYbvhz7zShGwS/giphy.gif"
+        };
+
+        let currentStateIndex = 0;
+        let paddingLevel = 0;
+
+        const questionEl = document.getElementById("question-text");
+        const imageEl = document.getElementById("main-image");
+        const yesBtn = document.getElementById("yes-btn");
+        const noBtn = document.getElementById("no-btn");
+
+        function updateUI() {
+            if (currentStateIndex >= states.length - 1) {
+                makeNoButtonMove();
+            }
+            const state = states[currentStateIndex];
+            questionEl.innerText = state.text;
+            imageEl.src = state.img;
+        }
+
+        function handleNoClick() {
+            currentStateIndex++;
+            if (currentStateIndex < states.length) {
+                paddingLevel += 20; 
+                yesBtn.style.padding = `${16 + paddingLevel}px ${24 + paddingLevel}px`;
+                const currentFontSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+                yesBtn.style.fontSize = (currentFontSize + 4) + "px";
+                updateUI();
+            } 
+        }
+
+        function handleYesClick() {
+            document.getElementById("button-container").style.display = "none";
+            questionEl.innerText = successState.text;
+            imageEl.src = successState.img;
+        }
+
+        function makeNoButtonMove() {
+            const rect = noBtn.getBoundingClientRect();
+            noBtn.style.left = rect.left + "px";
+            noBtn.style.top = rect.top + "px";
+            
+            noBtn.style.position = "fixed"; 
+            noBtn.addEventListener("mouseover", moveButtonRandomly);
+            noBtn.addEventListener("touchstart", moveButtonRandomly);
+        }
+
+        function moveButtonRandomly() {
+            const btnRect = noBtn.getBoundingClientRect();
+            const padding = 20; 
+            const maxX = window.innerWidth - btnRect.width - padding;
+            const maxY = window.innerHeight - btnRect.height - padding;
+
+            const randomX = Math.random() * Math.max(0, maxX);
+            const randomY = Math.random() * Math.max(0, maxY);
+
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
+        }
+
+        noBtn.addEventListener("click", handleNoClick);
+        yesBtn.addEventListener("click", handleYesClick);
+    </script>
+</body>
+</html>
